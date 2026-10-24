@@ -63,6 +63,10 @@ function App() {
   const [pathInfo, setPathInfo] = useState(getPathInfo());
   const [phone, setPhone] = useState(() => localStorage.getItem('primary_phone') || PHONE);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [arama, setArama] = useState('');
+  const [acikMi, setAcikMi] = useState(false);
+  const tumIller = ["Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin", "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa", "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", "Erzincan", "Erzurum", "Eskişehir", "Gaziantep", "Giresun", "Gümüşhane", "Hakkari", "Hatay", "Isparta", "Mersin", "İstanbul", "İzmir", "Kars", "Kastamonu", "Kayseri", "Kırklareli", "Kırşehir", "Kocaeli", "Konya", "Kütahya", "Malatya", "Manisa", "Kahramanmaraş", "Mardin", "Muğla", "Muş", "Nevşehir", "Niğde", "Ordu", "Rize", "Sakarya", "Samsun", "Siirt", "Sinop", "Sivas", "Tekirdağ", "Tokat", "Trabzon", "Tunceli", "Şanlıurfa", "Uşak", "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman", "Kırıkkale", "Batman", "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce"];
+  const filtrelenmisIller = tumIller.filter(il => il.toLowerCase().replace('ı','i').includes(arama.toLowerCase().replace('ı','i')));
 
   useEffect(() => {
     const syncRoute = () => setPathInfo(getPathInfo());
@@ -175,7 +179,33 @@ function LocationPage({ phone, navigate, info }: { phone: string; navigate: (hre
 
 function Admin({ phone, setPhone }: { phone: string; setPhone: (value: string) => void }) { const [value, setValue] = useState(phone); const [saved, setSaved] = useState(false); const save = () => { localStorage.setItem('primary_phone', value); setPhone(value); setSaved(true); window.setTimeout(() => setSaved(false), 2500); }; return <><InnerHero eyebrow="Yönetim merkezi" title={<>Marka kontrolü,<br /><span className="text-gold">tek panelde.</span></>} copy="Telefon ve dönüşüm iletişiminizi merkezi olarak yönetin. Bu alan, marka ayarlarının hızlıca gözden geçirilmesi için hazırlanmıştır." /><section className="mx-auto max-w-5xl px-5 py-16 lg:px-8"><div className="grid gap-6 lg:grid-cols-[1fr_1.4fr]"><aside className="rounded-2xl border border-white/10 bg-panel p-5"><div className="mb-5 text-xs font-bold uppercase tracking-widest text-white/40">Yönetim menüsü</div>{[['Telefon & WhatsApp', Phone], ['SEO içerik şablonları', FileText], ['Bölge matrisi', MapPin], ['Dönüşüm görünümü', BarChart3]].map(([label, Icon]) => <div key={label as string} className="mb-2 flex items-center gap-3 rounded-xl bg-gold/10 px-4 py-3 text-sm font-semibold text-gold"><Icon className="h-4 w-4" />{label as string}</div>)}</aside><div className="rounded-2xl border border-white/10 bg-panel p-7"><div className="eyebrow">Global iletişim ayarı</div><h2 className="mt-2 font-display text-3xl font-bold">Ana telefon numarası</h2><p className="mt-3 text-sm leading-relaxed text-white/50">Bu numara arama butonlarında ve sitenin dönüşüm alanlarında kullanılır.</p><label className="mt-7 block text-xs font-bold uppercase tracking-widest text-white/50">Telefon</label><div className="mt-2 flex gap-3"><input value={value} onChange={(event) => setValue(event.target.value.replace(/\D/g, '').slice(0, 11))} className="min-w-0 flex-1 rounded-xl border border-white/15 bg-black/30 px-4 py-3 font-display text-xl tracking-wider text-white outline-none focus:border-gold" /><button onClick={save} className="button-gold">Kaydet</button></div>{saved && <div className="mt-4 flex items-center gap-2 text-sm text-emerald-400"><Check className="h-4 w-4" /> Ayarlar bu tarayıcı için güncellendi.</div>}<div className="mt-8 grid gap-3 sm:grid-cols-2"><div className="rounded-xl border border-white/10 p-4"><div className="text-xs text-white/40">WhatsApp bağlantısı</div><div className="mt-1 text-sm font-semibold text-emerald-400">Aktif ve senkronize</div></div><div className="rounded-xl border border-white/10 p-4"><div className="text-xs text-white/40">Fiyat alanları</div><div className="mt-1 text-sm font-semibold text-gold">Kullanılmıyor</div></div></div></div></div></section></>; }
 
-function Footer({ navigate }: { navigate: (href: string) => void }) { return <footer className="border-t border-white/10 bg-black"><div className="mx-auto grid max-w-7xl gap-12 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8"><div><div className="flex items-center gap-3"><div className="h-12 w-12 overflow-hidden rounded-xl border border-gold/40"><img src={logoImage} alt="Çilingir Numarası logosu" className="h-full w-full object-contain p-1" /></div><div><div className="font-display font-bold text-gold">ÇİLİNGİR NUMARASI</div><div className="text-[10px] tracking-[0.24em] text-white/40">GÜVENLİĞİN ADRESİ</div></div></div><p className="mt-5 max-w-sm text-sm leading-relaxed text-white/45">Türkiye genelinde acil çilingir ve anahtarcı ihtiyaçlarınız için hızlı, güvenli ve şeffaf çözüm.</p></div><div><div className="mb-5 text-xs font-bold uppercase tracking-widest text-gold">Keşfet</div>{[['Hakkımızda', '/hakkimizda'], ['Hizmetlerimiz', '/hizmetlerimiz'], ['İletişim', '/iletisim']].map(([label, href]) => <button key={href} onClick={() => navigate(href)} className="mb-3 block text-sm text-white/50 transition hover:text-gold">{label}</button>)}</div><div><div className="mb-5 text-xs font-bold uppercase tracking-widest text-gold">Hizmet bölgeleri</div><div className="flex flex-wrap gap-2">{['İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya', 'Adana'].map((city) => <button onClick={() => navigate(`/${city.toLocaleLowerCase('tr-TR')}-cilingir`)} key={city} className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-white/50 transition hover:border-gold/40 hover:text-gold">{city}</button>)}</div></div></div><div className="border-t border-white/10"><div className="mx-auto flex max-w-7xl flex-col justify-between gap-2 px-5 py-5 text-xs text-white/30 sm:flex-row lg:px-8"><span>© 2026 Çilingir Numarası. Tüm hakları saklıdır.</span><span>7/24 Ekonomik & Şeffaf Fiyat Garantisi</span></div></div></footer>; }
+function Footer({ navigate }: { navigate: (href: string) => void }) { return <footer className="border-t border-white/10 bg-black"><div className="mx-auto grid max-w-7xl gap-12 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8"><div><div className="flex items-center gap-3"><div className="h-12 w-12 overflow-hidden rounded-xl border border-gold/40"><img src={logoImage} alt="Çilingir Numarası logosu" className="h-full w-full object-contain p-1" /></div><div><div className="font-display font-bold text-gold">ÇİLİNGİR NUMARASI</div><div className="text-[10px] tracking-[0.24em] text-white/40">GÜVENLİĞİN ADRESİ</div></div></div><p className="mt-5 max-w-sm text-sm leading-relaxed text-white/45">Türkiye genelinde acil çilingir ve anahtarcı ihtiyaçlarınız için hızlı, güvenli ve şeffaf çözüm.</p></div><div><div className="mb-5 text-xs font-bold uppercase tracking-widest text-gold">Keşfet</div>{[['Hakkımızda', '/hakkimizda'], ['Hizmetlerimiz', '/hizmetlerimiz'], ['İletişim', '/iletisim']].map(([label, href]) => <button key={href} onClick={() => navigate(href)} className="mb-3 block text-sm text-white/50 transition hover:text-gold">{label}</button>)}</div><div><div className="mb-5 text-xs font-bold uppercase tracking-widest text-gold">Hizmet bölgeleri</div>< <div className="relative w-full max-w-md mt-4 text-left mx-auto">
+  <input
+    type="text"
+    placeholder="Hizmet bölgesi seçin veya il ara..."
+    value={arama}
+    onChange={(e) => { setArama(e.target.value); setAcikMi(true); }}
+    onFocus={() => setAcikMi(true)}
+    className="w-full bg-zinc-900 border border-zinc-800 text-white rounded-lg px-4 py-3 placeholder-zinc-500 focus:outline-none focus:border-amber-500 text-sm shadow-inner"
+  />
+  {acikMi && (
+    <div className="absolute z-50 w-full mt-2 max-h-60 overflow-y-auto bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl text-sm">
+      {filtrelenmisIller.length > 0 ? (
+        filtrelenmisIller.map((il) => (
+          <div
+            key={il}
+            onClick={() => { setArama(il); setAcikMi(false); }}
+            className="px-4 py-3 text-zinc-300 hover:bg-amber-500 hover:text-black cursor-pointer transition-colors border-b border-zinc-800/40 last:border-b-0"
+          >
+            {il}
+          </div>
+        ))
+      ) : (
+        <div className="px-4 py-3 text-zinc-500 text-center">Şehir bulunamadı</div>
+      
+    
+  
+  {acikMi && <div className="fixed inset-0 z-40" onClick={() => setAcikMi(false)} />}
 
 function GlobalActions({ phone }: { phone: string }) { return <><a href={whatsappHref(WHATSAPP)} target="_blank" rel="noreferrer" className="whatsapp-float" aria-label="WhatsApp üzerinden yaz"><MessageCircle className="h-7 w-7" /></a><a href={phoneHref(phone)} className="mobile-call"><Phone className="h-5 w-5" /> HEMEN ÇİLİNGİR ARA</a></>; }
 
